@@ -2,8 +2,12 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ "main" ] # Ganti jika branch utama Anda bukan 'main'
+    branches: [ "main" ]
   workflow_dispatch:
+
+# Tambahkan bagian ini untuk menghilangkan warning deprecation
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 permissions:
   contents: read
@@ -15,12 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Versi 4 sudah mendukung Node 24 jika dipaksa via env
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24 # Update juga versi Node untuk aplikasi Anda ke 24
           cache: 'npm'
 
       - name: Install dependencies
@@ -32,7 +36,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist # Folder output default Astro
+          path: ./dist
 
   deploy:
     needs: build
